@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.my.moim.dao.IMoimDAO">
+
+	<select id="getInterestName" resultType="com.future.my.member.vo.InterestVO">
+		SELECT ctg_id, ctg_name
+		FROM INTEREST_CTG
+	</select>
+	
+	<insert id="insertMoim" parameterType="com.future.my.moim.vo.MoimVO">
+		<selectKey keyProperty="moimId" resultType="int" order="BEFORE">
+	        SELECT SEQ_MOIM.NEXTVAL FROM DUAL
+	    </selectKey>
+    INSERT INTO MOIM (
+        moim_id, 
+        moim_interest, 
+        moim_ctg, 
+        moim_minple, 
+        moim_maxple, 
+        moim_minage, 
+        moim_maxage, 
+        moim_fee, 
+        create_dt,
+        moim_dt,  
+        moim_place, 
+        moim_confirm, 
+        moim_type, 
+        moim_feedetail1, 
+        moim_feedetail2, 
+        moim_feedetail3, 
+        moim_feedetail4
+    ) VALUES (
+        #{moimId}, 
+        #{moimInterest}, 
+        #{moimCtg}, 
+        #{moimMinple}, 
+        #{moimMaxple}, 
+        #{moimMinage}, 
+        #{moimMaxage}, 
+        #{moimFee}, 
+        SYSDATE,
+        TO_DATE(#{moimDt}, 'YYYY-MM-DD HH24:MI'), 
+        #{moimPlace}, 
+        #{moimConfirm}, 
+        #{moimType}, 
+        #{moimFeedetail1}, 
+        #{moimFeedetail2}, 
+        #{moimFeedetail3}, 
+        #{moimFeedetail4}
+    )
+</insert>
+		
+	
+	<insert id="insertMoimRoom" parameterType="com.future.my.moim.vo.MoimRoomsVO">
+		INSERT INTO moim_rooms(
+	        moim_room_id, moim_id, mem_id, 
+	        room_role, approval_status, join_dt
+	    ) VALUES (
+	        SEQ_ROOMS.NEXTVAL, #{moimId}, #{memId}, 
+	        #{roomRole}, #{approvalStatus}, SYSDATE
+	    )
+	</insert>
+	
+<select id="getMoimList" resultType="com.future.my.moim.vo.MoimVO" parameterType="map">
+    SELECT 
+        m.MOIM_ID, 
+        m.MOIM_INTEREST, 
+        m.MOIM_CTG, 
+        m.MOIM_MINPLE, 
+        m.MOIM_MAXPLE, 
+        m.MOIM_PLACE, 
+        m.MOIM_DT, 
+        mr.MEM_ID, 
+        b.BOARD_TITLE, 
+        b.BOARD_CONTENT, 
+        b.BOARD_WRITER, 
+        mem.MEM_NAME, 
+        f.FILE_PATH, 
+        f.FILE_NAME
+    FROM 
+        MOIM m
+        LEFT JOIN MOIM_ROOMS mr ON m.MOIM_ID = mr.MOIM_ID
+        LEFT JOIN BOARD b ON m.MOIM_ID = b.BOARD_ID
+        LEFT JOIN MEMBERS mem ON b.BOARD_WRITER = mem.MEM_ID
+        LEFT JOIN BOARD_FILE f ON b.BOARD_ID = f.BOARD_ID
+    ORDER BY m.MOIM_ID DESC
+    OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+</select>
+    
+    <select id="getMoimById" parameterType="int" resultType="com.future.my.moim.vo.MoimVO">
+    SELECT 
+		    m.MOIM_ID, 
+		    m.MOIM_INTEREST, 
+		    m.MOIM_CTG, 
+		    m.MOIM_MINPLE, 
+		    m.MOIM_MAXPLE, 
+		    m.MOIM_PLACE, 
+		    m.MOIM_DT, 
+		    mr.MEM_ID,
+		    m.MOIM_FEE,
+		    m.MOIM_FEEDETAIL1, 
+		    m.MOIM_FEEDETAIL2, 
+		    m.MOIM_FEEDETAIL3, 
+		    m.MOIM_FEEDETAIL4, 
+		    b.BOARD_TITLE, 
+		    b.BOARD_CONTENT, 
+		    b.BOARD_WRITER, 
+		    mem.MEM_NAME, 
+		    f.FILE_PATH, 
+		    f.FILE_NAME
+		FROM 
+		    MOIM m
+		    LEFT JOIN MOIM_ROOMS mr ON m.MOIM_ID = mr.MOIM_ID
+		    LEFT JOIN BOARD b ON m.MOIM_ID = b.BOARD_ID
+		    LEFT JOIN MEMBERS mem ON b.BOARD_WRITER = mem.MEM_ID
+		    LEFT JOIN BOARD_FILE f ON b.BOARD_ID = f.BOARD_ID
+	    WHERE m.MOIM_ID = #{moimId}
+</select>
+	
+	
+	
+</mapper>

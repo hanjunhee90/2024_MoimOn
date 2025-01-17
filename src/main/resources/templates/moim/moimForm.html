@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	  layout:decorate="~{layouts/default_layout}">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>templete</title>
+<style>
+    .radio-button {
+        display: inline-block;
+        padding: 8px 16px;
+        margin: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+
+    .radio-input {
+        display: none;
+    }
+
+    .radio-input:checked + .radio-button {
+        background-color: #90AACB;
+        color: #fff;
+        border-color: #90AACB;
+    }
+</style>
+</head> 
+<body layout:fragment="content">
+<div class="content">
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Form Section -->
+            <div class="col-md-8">
+                <form class="form-section" id="postForm" method="post" action="/moim/createMoim" enctype="multipart/form-data">
+                    <!-- Form Title -->
+                    <h2 class="text-center mb-4"> 모임 / 클래스 만들기 </h2>
+                    <hr style="border: none; border-bottom: 1px solid #FF5733;">
+                    <!-- 모임 종류 선택 -->
+                    <div class="d-flex justify-content mb-4">
+                        <input class="radio-input" type="radio" name="moimCtg" id="meeting" value="모임">
+                        <label class="radio-button" for="meeting">
+                            모임<br><small>관심사 및 취향을 공유하는 모임</small>
+                        </label>
+                        <input class="radio-input" type="radio" name="moimCtg" id="class" value="클래스">
+                        <label class="radio-button" for="class">
+                            클래스<br><small>재능 및 경험을 나누는 클래스</small>
+                        </label>
+                    </div>
+
+                    <!-- 모임 카테고리 선택 (모임 선택 시만 표시) -->
+                    <div id="categorySection" class="mb-4" style="display: none;">
+                        <h5>모임 카테고리 선택</h5>
+                        <div class="d-flex flex-wrap">
+                            <div th:each="category : ${ctgList}">
+                                <input class="radio-input" type="radio" name="moimInterest" th:id="'category-' + ${category.ctgId}" th:value="${category.ctgId}">
+                                <label class="radio-button" th:for="'category-' + ${category.ctgId}">
+                                    <span th:text="${category.ctgName}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                <!-- 참여 인원 및 나이대 설정 -->
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="participants" class="form-label">참여 인원</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="minParticipants" name="moimMinple" placeholder="최소 인원" min="1" step="1" value="1">
+                            <input type="number" class="form-control" id="maxParticipants" name="moimMaxple" placeholder="최대 인원" min="10" step="1" value="5">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label class="form-label">나이대</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="minAge" name="moimMinage" placeholder="최소 나이" min="10" max="100" step="5" value="20">
+                            <input type="number" class="form-control" id="maxAge" name="moimMaxage" placeholder="최대 나이" min="20" max="100" step="5" value="35">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4">
+				    <h5>모임 승인 여부 선택</h5>
+				    <div class="d-flex">
+				        <input class="radio-input" type="radio" name="moimConfirm" id="approvalRequired" value="승인제">
+				        <label class="radio-button" for="approvalRequired">승인제</label>
+				
+				        <input class="radio-input" type="radio" name="moimConfirm" id="firstComeFirstServe" value="선착순">
+				        <label class="radio-button" for="firstComeFirstServe">선착순</label>
+				    </div>
+				</div>
+
+                <!-- 모임비 -->
+                <div class="mb-3">
+                    <label class="form-label">참가비</label>
+                    <div class="d-flex">
+                        <div class="form-check me-3">
+                            <input class="form-check-input" type="radio" name="moim_fee" id="feeYes" value="1">
+                            <label class="form-check-label" for="feeYes">있음</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="moim_fee" id="feeNo" value="0">
+                            <label class="form-check-label" for="feeNo">없음</label>
+                        </div>
+                    </div>
+                    <div id="feeAmount" class="mt-2" style="display: none;">
+                        <input type="number" class="form-control" id="feeInput" name="moimFee" placeholder="금액 입력" min="0" step="5000" value="0">
+                    </div>
+                    <!-- 참가비상세 -->
+                    <div class="mb-4" id="feePurposeSection" style="display: none;">
+                        <label class="form-label">참가비 사용 용도</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="대관료" id="venueFee" name="moimFeedetail1">
+                            <label class="form-check-label" for="venueFee">대관료</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="재료비" id="materialsFee" name="moimFeedetail2">
+                            <label class="form-check-label" for="materialsFee">재료비</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="다과비" id="snacksFee" name="moimFeedetail3">
+                            <label class="form-check-label" for="snacksFee">다과비</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="other" id="otherFee" name="feePurpose">
+                            <label class="form-check-label" for="otherFee">기타</label>
+                        </div>
+                        <!-- 기타 용도 입력창 -->
+                        <div id="otherTextInput" class="mt-2" style="display: none;">
+                            <label for="otherText" class="form-label">기타 용도 입력</label>
+                            <input type="text" class="form-control" id="otherText" name="moimFeedetail4" placeholder="기타 용도를 입력하세요">
+                        </div>
+                    </div>
+                </div>
+
+                <!--장소 및 날짜,시간 -->
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="moimPlace" class="form-label">모임 장소</label>
+                        <input type="text" class="form-control" id="moimPlace" name="moimPlace" placeholder="모임 장소">
+                    </div>
+                    <div class="col">
+                        <label for="moimDate" class="form-label">모임 날짜</label>
+                        <input type="date" class="form-control" id="moimDate" name="moim_dt">
+                    </div>
+                    <div class="col">
+                        <label for="moimTime" class="form-label">모임 시간</label>
+                        <input type="time" class="form-control" id="moimTime" name="moim_time">
+                    </div>
+                    <!-- controller에 전달될 실제 날짜값(년월일 + 시간) -->
+                    <input type="hidden" id="moimCombinedDt" name="moimDt">
+                </div>
+				
+				<div th:replace="~{fragments/editor::editor}">
+					<input type="hidden" name="boardContent" id="contentInput">
+				</div>
+				
+				<input type="hidden" name="boardCategory" id="boardCategory">
+				<input type="hidden" name="boardWriter" th:value="${session.members.memId}">
+                <!-- 버튼 -->
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary">모임 생성하기</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 미리보기 부분 -->
+        <div class="col-md-4 mt-5">
+            <div class="form-preview p-3" style="background-color: #f9f9f9; border: 1px solid #ccc; border-radius: 8px;">
+                <h4 class="text-center mb-3" style="font-weight: bold; color: #333;">미리보기</h4>
+                <div id="previewContent" style="line-height: 1.6;">
+                    <p><strong>유형:</strong> <span id="previewEventType" style="color: #555;">선택 안됨</span></p>
+                    <p><strong>카테고리:</strong> <span id="previewCategory" style="color: #555;">선택 안됨</span></p>
+                    <p><strong>참여 인원:</strong> <span id="previewParticipants" style="color: #555;">0~0</span> 명</p>
+                    <p><strong>나이대:</strong> <span id="previewAge" style="color: #555;">미설정</span></p>
+    				<p><strong>승인 여부:</strong> <span id="previewMoimConfirm" style="color: #555;">선택 안됨</span></p>
+                    <p><strong>참가비:</strong> <span id="previewFee" style="color: #555;">없음</span></p>
+                    <p><strong>참가비 금액:</strong> <span id="previewFeeAmount" style="color: #555;">미설정</span></p>
+                    <p><strong>참가비 사용 용도:</strong></p>
+                    <div id="previewFeePurpose" style="color: #555;">없음</div>
+                    <p><strong>모임 장소:</strong> <span id="previewPlace" style="color: #555;">미설정</span></p>
+                    <p><strong>모임 날짜:</strong> <span id="previewDate" style="color: #555;">미설정</span></p>
+                    <p><strong>모임 시간:</strong> <span id="previewTime" style="color: #555;">미설정</span></p>
+                    <p><strong>작성자:</strong> <span id="previewAuthor" style="color: #555;">미설정</span></p>
+                    <p><strong>제목:</strong> <span id="previewTitle" style="color: #555;">미설정</span></p>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+</body>
+
+</html>

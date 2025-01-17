@@ -1,0 +1,66 @@
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">MoimOn 로그인</h5>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <h1>MoimOn</h1>
+                
+                <!-- 로그인 폼 -->
+                <form action="/members/join" method="post">
+                    <!-- 아이디 입력 -->
+                    <input type="text" class="form-control mb-2" name="memId" placeholder="아이디" required>
+                    
+                    <!-- 비밀번호 입력 -->
+                    <input type="password" class="form-control mb-3" name="memPass" placeholder="비밀번호" autocomplete="off" required>
+                    
+                    <!-- 로그인 버튼 -->
+                    <button type="submit" class="btn btn-primary w-100 mb-3">로그인</button>
+                    
+                    <!-- 로그인 실패 메시지 -->
+                    <div th:if="${errorMessage}" class="alert alert-danger mt-3" role="alert">
+                        <span th:text="${errorMessage}"></span>
+                    </div>
+                </form>
+                
+                <!-- 구분선 -->
+                <div class="d-flex align-items-center mb-3">
+                    <hr class="flex-grow-1">
+                    <span class="px-2 text-muted">또는</span>
+                    <hr class="flex-grow-1">
+                </div>
+
+                <!-- 소셜 로그인 버튼 -->
+				<a class="d-inline-block me-2" onclick="alert('카카오 서비스 점검중입니다.');">
+				    <img th:src="@{/images/kakao_login.png}" class="img-fluid" alt="Kakao Login" style="width: 40px; height: 40px;">
+				</a>
+				<a class="d-inline-block me-2" onclick="alert('네이버 서비스 점검중입니다.');">
+				    <img th:src="@{/images/naver_login.png}" class="img-fluid" alt="Naver Login" style="width: 40px; height: 40px;">
+				</a>
+				<a class="d-inline-block" onclick="alert('구글 서비스 점검중입니다.');">
+				    <img th:src="@{/images/google_login.png}" class="img-fluid" alt="Google Login" style="width: 40px; height: 40px;">
+				 </a>             
+                <!-- <a href="/oauth2/authorization/kakao" class="d-inline-block me-2">
+                    <img th:src="@{/images/kakao_login.png}" class="img-fluid" alt="Kakao Login" style="width: 40px; height: 40px;">
+                </a>
+                <a href="/oauth2/authorization/naver" class="d-inline-block me-2">
+                    <img th:src="@{/images/naver_login.png}" class="img-fluid" alt="Naver Login" style="width: 40px; height: 40px;">
+                </a>
+                <a href="/oauth2/authorization/google" class="d-inline-block">
+                    <img th:src="@{/images/google_login.png}" class="img-fluid" alt="Google Login" style="width: 40px; height: 40px;">
+                </a>
+ -->
+                <!-- 회원가입 안내 -->
+                <p class="mt-3">계정이 없으신가요? <a href="/members/register" class="text-primary">가입하기</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:if="${showLoginModal}">
+    $(document).ready(function() {
+        // ID가 'loginModal'인 모달 창을 선택하여 jQuery의 모달 메서드를 사용하여 표시합니다.
+        $('#loginModal').modal('show');
+    });
+</script>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>MoimOn Layout</title>
+	<th:block th:replace="~{fragments/link::link}"></th:block>
+
+
+</head>
+<body>
+ <!-- th:replace 속성은 해당 속성이 선언된 html 태그를 다른 html 파일로 치환. fragments 폴더 아래 header.html 파일의 "th:fragment=header" 영역을 가져옴 -->
+ <!-- th:replace="~{폴더명/파일명(파일위치)::프레그먼트명}" -->
+	<th:block th:replace="~{fragments/header::header}"></th:block>
+   
+
+    <!-- layout에서 변경되는 영역을 fragment로 설정. -->
+    <th:block layout:fragment="content" class="content"></th:block>
+    
+
+
+    <!-- header와 마찬가지로 fragments 폴더 아래에 footer.html의 "th:fragment=footer" 영역을 가져옴 -->
+    <th:block th:replace="~{fragments/footer::footer}"></th:block>
+    
+	<th:block th:replace="~{fragments/script::script}"></th:block>
+	<!-- 모달 HTML 포함: footer 위에 위치 -->
+    <div th:replace="~{fragments/login_modal::#loginModal}"></div>
+    
+
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	  layout:decorate="~{layouts/default_layout}">
+<head>
+<meta charset="UTF-8">
+<title>정보수정</title>
+</head>
+<body layout:fragment="content">
+	<div class="content">
+		<div class="container mt-5">
+
+       <h2 class="text-center">동네 선택(최대 3개까지)</h2>
+       <hr style="border: none; border-bottom: 1px solid #FF5733;">
+	
+       <!-- 선택된 주소 미리보기 -->
+       <div class="table-container mb-3">
+           <h4>내 관심지역 <span id="selection-count">0/3</span></h4>
+           <div id="selected-items" class="selection-container"></div>
+       </div>
+
+       <!-- 주소 선택 테이블 -->
+       <div class="table-container">
+           <table id="juso" class="table table-bordered table-hover text-center">
+               <tbody></tbody>
+           </table>
+       </div>
+
+       <!-- 숨겨진 input 요소들과 제출 버튼을 포함하는 폼 -->
+       <form id="addressForm" method="post" action="/members/submitAddr">
+		    <div id="hidden-inputs"></div>
+		    <div class="text-center mt-3">
+		        <button type="submit" class="btn btn-primary">제출</button>
+		    </div>
+		</form>
+     <div class="text-center mt-4">
+        <a href="/members/modify" class="btn btn-secondary">다른 페이지로 이동</a>
+    </div>
+	</div>
+	</div>
+</body>
+</html>

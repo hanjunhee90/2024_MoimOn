@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.future.my.board.dao.IBoardDAO">
+<select id="getAllBoards" resultMap="boardResultMap">
+    SELECT b.*, 
+           (SELECT COUNT(*) FROM BOARD_COMMENT c WHERE c.board_id = b.board_id) AS comment_count,
+           f.file_name AS file_name, f.file_path AS file_path
+    FROM BOARD b
+    LEFT JOIN BOARD_FILE f ON b.board_id = f.board_id
+    WHERE b.board_delete = 'N'
+    ORDER BY b.board_create DESC
+</select>
+
+<resultMap id="boardResultMap" type="com.future.my.board.vo.BoardVO">
+    <id property="boardId" column="board_id"/>
+    <result property="boardWriter" column="board_writer"/>
+    <result property="boardTitle" column="board_title"/>
+    <result property="boardContent" column="board_content"/>
+    <result property="boardCreate" column="board_create"/>
+    <result property="boardLike" column="board_like"/>
+    <result property="commentCount" column="comment_count"/>
+    <association property="file" javaType="com.future.my.board.vo.BoardFileVO">
+        <result property="fileName" column="file_name"/>
+        <result property="filePath" column="file_path"/>
+    </association>
+</resultMap>
+
+<resultMap id="commentResultMap" type="com.future.my.board.vo.BoardCommentVO">
+    <id property="commentId" column="comment_id"/>
+    <result property="commentMem" column="comment_mem"/>
+    <result property="commentContent" column="comment_content"/>
+    <result property="commentCreate" column="comment_create"/>
+    <association property="file" javaType="com.future.my.board.vo.BoardFileVO">
+        <result property="fileName" column="file_name"/>
+        <result property="filePath" column="file_path"/>
+    </association>
+</resultMap>
+
+<!-- 게시글 파일 조회 쿼리 -->
+<select id="getBoardFileByBoardId" parameterType="int" resultType="com.future.my.board.vo.BoardFileVO">
+    SELECT * FROM BOARD_FILE WHERE board_id = #{boardId}
+</select>
+
+<!-- 댓글 파일 조회 쿼리 -->
+<select id="getCommentFileByCommentId" parameterType="int" resultType="com.future.my.board.vo.BoardFileVO">
+    SELECT * FROM BOARD_FILE WHERE comment_id = #{commentId}
+</select>
+
+
+    <!-- 게시글 상세 조회 -->
+    <select id="getBoardById" resultType="com.future.my.board.vo.BoardVO" parameterType="int">
+        SELECT * FROM BOARD WHERE board_id = #{boardId}
+    </select>
+
+    <!-- 게시글 작성 생성 후 바로 파일 테이블에 board_id 필요하기 때문에 사용 -->
+	<insert id="insertBoard" parameterType="com.future.my.board.vo.BoardVO">
+	    <selectKey keyProperty="boardId" resultType="int" order="BEFORE">
+	        SELECT SEQ_BOARD.NEXTVAL FROM DUAL
+	    </selectKey>
+	    INSERT INTO BOARD (board_id, board_category, board_writer, board_title, board_content, board_create, board_modify, board_hit, board_like, board_delete)
+	    VALUES (#{boardId}, #{boardCategory}, #{boardWriter}, #{boardTitle}, #{boardContent}, SYSDATE, SYSDATE, 0, 0, 'N')
+	</insert>
+    
+    <insert id="insertFile" parameterType="com.future.my.board.vo.BoardFileVO">
+    	INSERT INTO board_file(file_id,board_id,file_path,file_name,file_upload_date)
+		VALUES(SEQ_FILE.NEXTVAL, #{boardId}, #{filePath}, #{fileName}, SYSDATE)
+    </insert>
+
+    <!-- 게시글 수정 -->
+    <update id="updateBoard" parameterType="com.future.my.board.vo.BoardVO">
+        UPDATE BOARD SET board_title = #{boardTitle}, board_content = #{boardContent}, board_modify = SYSDATE WHERE board_id = #{boardId}
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <update id="deleteBoard" parameterType="int">
+        UPDATE BOARD SET board_delete = 'Y' WHERE board_id = #{boardId}
+    </update>
+
+    <!-- 게시글 조회수 증가 -->
+    <update id="increaseBoardHit" parameterType="int">
+        UPDATE BOARD SET board_hit = board_hit + 1 WHERE board_id = #{boardId}
+    </update>
+	
+</mapper>

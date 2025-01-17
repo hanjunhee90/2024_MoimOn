@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	  layout:decorate="~{layouts/default_layout}">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>edit</title>
+	
+</head> 
+<body layout:fragment="content">
+	    <div class="content">
+        <div class="container my-4">
+            <form id="postForm" action="/editor/save" method="POST" enctype="multipart/form-data">
+                <!-- 버튼 그룹 -->
+                <div class="button-group d-flex mb-3">
+				    <input type="radio" class="btn-check" name="options" id="all" autocomplete="off" checked onclick="selectButton(this)">
+				    <label class="btn btn-outline-primary" for="all">전체</label>
+				
+				    <input type="radio" class="btn-check" name="options" id="notice" autocomplete="off" onclick="selectButton(this)">
+				    <label class="btn btn-outline-primary" for="notice">공지</label>
+				
+				    <input type="radio" class="btn-check" name="options" id="review" autocomplete="off" onclick="selectButton(this)">
+				    <label class="btn btn-outline-primary" for="review">모임후기</label>
+				
+				    <input type="radio" class="btn-check" name="options" id="greeting" autocomplete="off" onclick="selectButton(this)">
+				    <label class="btn btn-outline-primary" for="greeting">가입인사</label>
+				
+				    <input type="radio" class="btn-check" name="options" id="free" autocomplete="off" onclick="selectButton(this)">
+				    <label class="btn btn-outline-primary" for="free">자유</label>
+				</div>
+                <!-- 작성자, 제목, 에디터 영역 포함 -->
+                <div th:insert="~{fragments/editor :: editor}"></div>
+                
+                <!-- 저장 버튼 -->
+                <button type="submit" class="btn btn-primary mt-3">저장</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+
+</html>

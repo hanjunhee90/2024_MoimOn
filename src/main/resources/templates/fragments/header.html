@@ -1,0 +1,40 @@
+<!-- 헤더 설정 부분 -->
+<!-- 프레그먼트 : 레이아웃에 공통적으로 사용할 UI -->
+<!-- th:fragment="프레그먼트명" -->
+<th:block th:fragment="header">
+    <header class="navbar navbar-expand-sm navbar-light bg-light fixed-top nav-custom">
+        <div class="container">
+            <h3><a class="navbar-brand" href="/">MoimOn</a></h3>
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="/">HOME</a></li>
+                    
+                    <!-- 로그인 상태에 따라 다른 메뉴 표시 -->
+                    <li class="nav-item" th:if="${session.members == null}">
+                        <a class="nav-link" role="button" data-bs-toggle="modal" data-bs-target="#loginModal">LOGIN</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.members != null}">
+                        <a class="nav-link" th:href="@{/members/interest}">
+                            <span th:text="${session.members.memName}">사용자</span>님(정보수정)
+                        </a>
+                    </li>
+
+                    <li class="nav-item" th:if="${session.members != null}">
+                        <a class="nav-link" href="/moim/moimForm">모임/클래스 만들기</a>
+                    </li>
+                    
+                    <li class="nav-item" th:if="${session.members != null}">
+                        <a class="nav-link" href="#">나의 활동</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.members != null}">
+                        <a class="nav-link" href="/board/new">자유게시판작성</a>
+                    </li>
+
+                    <li class="nav-item" th:if="${session.members != null}">
+                        <a class="nav-link" href="/logout">LOGOUT</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+</th:block>

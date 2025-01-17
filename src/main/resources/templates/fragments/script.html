@@ -1,0 +1,29 @@
+<!-- 필요한 script 작성 -->
+<!-- js 가져오는 순서 -->
+<!-- jQuery -->
+<!-- jQuery 기반 라이브러리 ( bootstrap ) -->
+<!-- 자바스크립트 라이브러리 -->
+<!-- 사용자 정의 자바스트립트 -->
+<!-- jQuery 를 사용할거면 먼저 jQuery를 불러오고 -->
+<!-- 그 다음 jQuery기반 js라이브러리 호출 그다음 자바스크립트(커스텀자바스크립트) -->
+<th:block th:fragment="script">
+	<!-- jQuery 라이브러리: DOM 조작, 이벤트 처리 등을 간편하게 하기 위해 사용 -->
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<!-- 팝오버는 Popper에 의존하고 있습니다. 팝오버를 동작시키기 위해서는 bootstrap.js 앞에 popper.min.js를 쓰거나 Popper를 포함한 bootstrap.bundle.min.js / bootstrap.bundle.js를 사용해야 합니다. -->
+	<!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script> -->
+	<!-- Bootstrap JavaScript: 부트스트랩의 컴포넌트 (모달, 캐러셀 등)를 사용하기 위해 필요 -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+	 integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+	 crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.pjax/2.0.1/jquery.pjax.min.js"></script>
+	<!-- TUI 에디터 JS CDN -->
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <!-- TUI 에디터 한글관련 CDN -->
+    <script src="https://uicdn.toast.com/editor/latest/i18n/ko-kr.js"></script>
+    <script th:src="@{/js/modify.js}"></script>
+    <script th:src="@{/js/regist.js}"></script>
+    <script th:src="@{/js/edit.js}"></script>
+	<script th:src="@{/js/juso.js}"></script>
+	<script th:src="@{/js/moim.js}"></script>
+	<script th:src="@{/js/login.js}"></script>
+</th:block>

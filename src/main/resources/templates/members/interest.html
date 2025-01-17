@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	  layout:decorate="~{layouts/default_layout}">
+<head>
+<meta charset="UTF-8">
+<title>정보수정</title>
+</head>
+<body layout:fragment="content">
+	<div class="content">
+		<div class="container mt-5">
+
+		   <h4>관심사 리스트(카테고리 1개당 1개씩 선택!!)</h4>
+		   <hr style="border: none; border-bottom: 1px solid #FF5733;">
+		   
+		   <!-- Form 시작 -->
+		   <form action="/members/submitInterest" method="POST">
+		       <div th:each="categoryId : ${#numbers.sequence(1, 10)}" class="category-group-inter">
+		           <h5 th:switch="${categoryId}">
+		               <span th:case="1">푸드/드링크</span>
+		               <span th:case="2">스터디/학습</span>
+		               <span th:case="3">예술/문화</span>
+		               <span th:case="4">운동/액티비티</span>
+		               <span th:case="5">게임</span>
+		               <span th:case="6">스포츠 관람</span>
+		               <span th:case="7">공연/전시</span>
+		               <span th:case="8">재테크/경제</span>
+		               <span th:case="9">여행</span>
+		               <span th:case="10">취미 친구</span>
+		               <span th:case="*">기타 카테고리</span>
+		           </h5>
+		
+		           <div class="row-container-inter">
+		               <div th:each="interest, iterStat : ${interests}" th:if="${interest.ctgId == categoryId}">
+		                   <input type="radio" class="radio-input-inter"
+		                          th:name="'category_' + ${categoryId}"  
+		                          th:id="'interest_' + ${interest.itrId}"
+		                          th:value="${interest.itrId}">
+		                   <label th:for="'interest_' + ${interest.itrId}" class="radio-button-inter"
+		                          th:text="${interest.itrName}"></label>
+		               </div>
+		           </div>
+		       </div>
+		
+		       <!-- 제출 버튼 -->
+		       <button type="submit" class="btn btn-primary mt-4">제출하기</button>
+		   </form>
+		   <!-- 다른 페이지로 이동 버튼 -->
+           <div class="text-center mt-4">
+               <a href="/members/addr" class="btn btn-secondary">다른 페이지로 이동</a>
+           </div>
+		</div>
+	</div>
+</body>
+</html>
